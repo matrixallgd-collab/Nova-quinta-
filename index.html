@@ -918,11 +918,14 @@ table.lots-table tr:hover td { background: rgba(16, 185, 129, 0.08); }
       <div id="gate-pane-broker" class="gate-pane">
         <div>
           <label class="field-label" for="broker-login-name">Nome ou Código do Corretor</label>
-          <input id="broker-login-name" class="field-input" type="text" placeholder="Ex.: Corretor Demo">
+          <input id="broker-login-name" class="field-input" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Ex.: corretor">
         </div>
         <div>
           <label class="field-label" for="broker-login-pass">Senha de Acesso</label>
-          <input id="broker-login-pass" class="field-input" type="password" placeholder="Senha do corretor">
+          <div style="position:relative;display:flex;align-items:center;">
+            <input id="broker-login-pass" class="field-input" type="password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Senha do corretor" style="padding-right:42px;">
+            <button type="button" class="toggle-pass-btn" data-target="broker-login-pass" style="position:absolute;right:8px;background:none;border:none;color:#a7f3d0;font-size:15px;cursor:pointer;padding:4px;" title="Mostrar/ocultar senha">👁️</button>
+          </div>
         </div>
         <button id="btn-enter-broker" class="action-btn" style="width:100%;padding:12px;">
           🤝 Entrar como Corretor
@@ -937,17 +940,20 @@ table.lots-table tr:hover td { background: rgba(16, 185, 129, 0.08); }
       <div id="gate-pane-master" class="gate-pane">
         <div>
           <label class="field-label" for="master-login-user">Login Master</label>
-          <input id="master-login-user" class="field-input" type="text" placeholder="Usuário Master">
+          <input id="master-login-user" class="field-input" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Guilherme delfino">
         </div>
         <div>
           <label class="field-label" for="master-login-pass">Senha Master</label>
-          <input id="master-login-pass" class="field-input" type="password" placeholder="Senha Master">
+          <div style="position:relative;display:flex;align-items:center;">
+            <input id="master-login-pass" class="field-input" type="password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Digite a senha Master" style="padding-right:42px;">
+            <button type="button" class="toggle-pass-btn" data-target="master-login-pass" style="position:absolute;right:8px;background:none;border:none;color:#fbbf24;font-size:15px;cursor:pointer;padding:4px;" title="Mostrar/ocultar senha">👁️</button>
+          </div>
         </div>
         <button id="btn-enter-master" class="action-btn gold" style="width:100%;padding:12px;">
           👑 Entrar no Painel Master
         </button>
         <div class="gate-note">
-          Acesso restrito ao administrador: gestão de corretores, contato oficial de WhatsApp, edição de disponibilidade de lotes/quadras, links oficiais e base completa de leads.
+          Acesso restrito ao administrador: gestão de corretores, contato oficial de WhatsApp, edição de disponibilidade de lotes/quadras, links oficiais e base completa de leads. <span style="opacity:.6;">(v2.2)</span>
         </div>
       </div>
     </div>
@@ -1858,6 +1864,20 @@ const IMG_DATA = {"masterplan": "data:image/webp;base64,UklGRup5BwBXRUJQVlA4IN55
     showToast(`Painel Master ativo: ${mc.name}`);
     enterSystem({ role: 'master', name: mc.name, creci: mc.creci, phone: mc.phone }, 'map');
   });
+
+  // Show/hide password toggle & Enter-key submit on mobile/desktop keyboards
+  document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const inp = document.getElementById(btn.getAttribute('data-target'));
+      if (!inp) return;
+      const isPwd = inp.type === 'password';
+      inp.type = isPwd ? 'text' : 'password';
+      btn.textContent = isPwd ? '🙈' : '👁️';
+    });
+  });
+  document.getElementById('master-login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-enter-master').click(); });
+  document.getElementById('broker-login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-enter-broker').click(); });
+  document.getElementById('lead-whatsapp').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-enter-visitor').click(); });
 
   function trackLotForActiveLead(lot) {
     if (!session || session.role !== 'visitor' || !session.leadId) return;
