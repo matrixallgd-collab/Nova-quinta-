@@ -856,8 +856,11 @@ table.lots-table tr:hover td { background: rgba(16, 185, 129, 0.08); }
   #compass-btn { width: 44px; height: 44px; top: calc(56px + var(--safe-top)); }
   .compass-dial { width: 24px; height: 24px; }
 }
+@media (max-width: 480px) {
+  .brand-text { display: none; }
+  .brand-pill { padding: 4px; }
+}
 @media (max-width: 440px) {
-  .brand-pill { padding: 4px 8px 4px 4px; }
   .dock-pill { min-width: 52px; height: 44px; padding: 3px 6px; font-size: 9.2px; }
   .metrics-grid { grid-template-columns: 1fr; }
 }
@@ -944,8 +947,7 @@ table.lots-table tr:hover td { background: rgba(16, 185, 129, 0.08); }
           👑 Entrar no Painel Master
         </button>
         <div class="gate-note">
-          Controle total do sistema: gestão de corretores, contato oficial de WhatsApp, edição de disponibilidade de lotes/quadras, links oficiais e base completa de leads.<br>
-          <span style="color:var(--gold-bright);">Acesso demonstração:</span> usuário <strong>master</strong> · senha <strong>master2026</strong>
+          Acesso restrito ao administrador: gestão de corretores, contato oficial de WhatsApp, edição de disponibilidade de lotes/quadras, links oficiais e base completa de leads.
         </div>
       </div>
     </div>
@@ -1844,12 +1846,12 @@ const IMG_DATA = {"masterplan": "data:image/webp;base64,UklGRup5BwBXRUJQVlA4IN55
 
   // Portal 3: Master
   document.getElementById('btn-enter-master').addEventListener('click', () => {
-    const u = document.getElementById('master-login-user').value.trim().toLowerCase();
+    const u = document.getElementById('master-login-user').value.trim().replace(/\s+/g, ' ').toLowerCase();
     const p = document.getElementById('master-login-pass').value.trim();
-    const okUser = u === 'master' || u === 'guilherme' || u === 'admin';
-    const okPass = p === 'master2026' || p === '123456';
+    const okUser = u === 'guilherme delfino';
+    const okPass = p === '11837tH95ekj#';
     if (!okUser || !okPass) {
-      showToast('Credenciais Master inválidas. Demo: master / master2026');
+      showToast('Login ou senha Master inválidos.');
       return;
     }
     const mc = getMasterContact();
