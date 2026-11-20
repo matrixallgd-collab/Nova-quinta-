@@ -931,8 +931,7 @@ table.lots-table tr:hover td { background: rgba(16, 185, 129, 0.08); }
           🤝 Entrar como Corretor
         </button>
         <div class="gate-note">
-          Acesso ao <strong>Gerador de Links (E-Book &amp; Mapa 3D)</strong>, <strong>Painel de Leads</strong>, Trena 3D, GPS Topográfico UTM 22S e tabela completa de 715 lotes.<br>
-          <span style="color:var(--gold-bright);">Acesso demonstração:</span> usuário <strong>corretor</strong> · senha <strong>corretor2026</strong>
+          Acesso ao <strong>Gerador de Links (E-Book &amp; Mapa 3D)</strong>, <strong>Painel de Leads</strong>, Trena 3D, GPS Topográfico UTM 22S e tabela completa de 715 lotes.
         </div>
       </div>
 
@@ -953,7 +952,7 @@ table.lots-table tr:hover td { background: rgba(16, 185, 129, 0.08); }
           👑 Entrar no Painel Master
         </button>
         <div class="gate-note">
-          Acesso restrito ao administrador: gestão de corretores, contato oficial de WhatsApp, edição de disponibilidade de lotes/quadras, links oficiais e base completa de leads. <span style="opacity:.6;">(v2.2)</span>
+          Acesso restrito ao administrador: gestão de corretores, contato oficial de WhatsApp, edição de disponibilidade de lotes/quadras, links oficiais e base completa de leads. <span style="opacity:.6;">(v2.3)</span>
         </div>
       </div>
     </div>
@@ -1692,9 +1691,17 @@ const IMG_DATA = {"masterplan": "data:image/webp;base64,UklGRup5BwBXRUJQVlA4IN55
   }
 
   function getBrokersList() {
-    return lsGet('nq_local_brokers_v1', [
+    const defaults = [
+      { id: 'brk-cripa', name: 'Cripa', user: 'cripa', pass: '12345', creci: '', phone: '5514988002390' },
       { id: 'demo-corretor', name: 'Corretor Credenciado', user: 'corretor', pass: 'corretor2026', creci: '272251-F', phone: '5514988002390' }
-    ]);
+    ];
+    const saved = lsGet('nq_local_brokers_v1', null);
+    if (!Array.isArray(saved) || !saved.length) return defaults;
+    if (!saved.some(b => String(b.user || '').toLowerCase() === 'cripa')) {
+      saved.unshift(defaults[0]);
+      lsSet('nq_local_brokers_v1', saved);
+    }
+    return saved;
   }
   function saveBrokersList(list) { lsSet('nq_local_brokers_v1', list); }
 
@@ -1843,7 +1850,7 @@ const IMG_DATA = {"masterplan": "data:image/webp;base64,UklGRup5BwBXRUJQVlA4IN55
     const brokers = getBrokersList();
     const found = brokers.find(b => (b.user.toLowerCase() === u || b.name.toLowerCase() === u) && b.pass === p);
     if (!found) {
-      showToast('Credenciais inválidas. Demo: corretor / corretor2026');
+      showToast('Login ou senha de corretor inválidos.');
       return;
     }
     showToast(`Acesso Corretor liberado: ${found.name}`);
